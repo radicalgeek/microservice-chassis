@@ -16,7 +16,7 @@ default:
 
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH
 
 variables:
   NPM_TOKEN: ${CI_JOB_TOKEN}
