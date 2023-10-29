@@ -50,7 +50,13 @@ publish:
       else
           MINOR_VERSION=$((latest_minor+1))
       fi
-    - PATCH_VERSION=$(git rev-list refs/tags/$latest_tag..HEAD --count)
+    - |
+      if git rev-parse refs/tags/$latest_tag >/dev/null 2>&1; then
+          PATCH_VERSION=$(git rev-list refs/tags/$latest_tag..HEAD --count)
+      else
+          PATCH_VERSION=0
+          echo "No commits since tag $latest_tag. Setting PATCH_VERSION to $PATCH_VERSION."
+      fi
     - FULL_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
     - git tag $FULL_VERSION
     - git push https://gitlab-ci-token:${ACCESS_TOKEN}@gitlab.radicalgeek.co.uk/trigbagger/lib/service-chassis.git --tags
