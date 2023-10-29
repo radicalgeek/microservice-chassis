@@ -26,16 +26,21 @@ stages:
 
 publish:
   stage: release
-  publish:
-  stage: release
   script:
     - 'which git || ( apk --no-cache add git )'
     - git fetch --tags origin main:main
     - |
       if [ -z "$(git tag)" ]; then
         latest_tag="1.0.0"
+        echo "No tags found. Defaulting to $latest_tag."
       else
         latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+        if git rev-parse refs/tags/$latest_tag >/dev/null 2>&1; then
+            echo "Tag $latest_tag exists."
+        else
+            echo "Tag $latest_tag does not exist. Defaulting to 1.0.0."
+            latest_tag="1.0.0"
+        fi
       fi
     - latest_major=$(echo $latest_tag | cut -d'.' -f1)
     - latest_minor=$(echo $latest_tag | cut -d'.' -f2)
@@ -44,13 +49,6 @@ publish:
           MINOR_VERSION=0
       else
           MINOR_VERSION=$((latest_minor+1))
-      fi
-    - |
-      if git rev-parse refs/tags/$latest_tag >/dev/null 2>&1; then
-          echo "Tag $latest_tag exists."
-      else
-          echo "Tag $latest_tag does not exist. Exiting."
-          exit 1
       fi
     - PATCH_VERSION=$(git rev-list refs/tags/$latest_tag..HEAD --count)
     - FULL_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
