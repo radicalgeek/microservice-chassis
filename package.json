@@ -1,5 +1,5 @@
 {
-  "name": "service-chassis",
+  "name": "@trigbagger/service-chassis",
   "version": "1.0.0",
   "description": "reusable service chassis for building microservices",
   "main": "index.js",
@@ -10,7 +10,8 @@
     "access": "public"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "lib/**/*"
   ],
   "author": "mark@radicalgeek.co.uk",
   "license": "ISC",
