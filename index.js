@@ -11,5 +11,6 @@ module.exports = {
   formatError,
   mq, 
   cacheHandler,
-  messageValidator
+  messageValidator,
+  publishMessage: mq.publishMessage,
 };
