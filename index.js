@@ -13,4 +13,5 @@ module.exports = {
   cacheHandler,
   messageValidator,
   publishMessage: mq.publishMessage,
+  setupPublisher: mq.setupPublisher,
 };
