@@ -60,7 +60,14 @@ publish:
     - FULL_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
     - git tag $FULL_VERSION
     - git push https://gitlab-ci-token:${ACCESS_TOKEN}@gitlab.radicalgeek.co.uk/trigbagger/lib/service-chassis.git --tags
+
+    # Publish to GitLab NPM registry
     - npm version $FULL_VERSION --no-git-tag-version
     - npm publish --registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/
+    - >
+      sed -i 's/"name": "@trigbagger\/service-chassis"/"name": "@radicalgeek\/service-chassis"/' package.json
+    # Publish to public NPM registry
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+    - npm publish
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
