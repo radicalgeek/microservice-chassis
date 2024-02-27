@@ -70,6 +70,8 @@ publish:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
     - npm publish
     # pushto github
+    - git config --global user.email "mark@radicalgeek.co.uk"
+    - git config --global user.name "Mark"
     - git add .
     - git commit -m "update public repo"
     - git push --force https://$GITHUB_TOKEN@github.com/RadicalGeekTechnology/service-chassis-nodejs.git HEAD:refs/heads/main
