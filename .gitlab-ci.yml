@@ -69,5 +69,7 @@ publish:
     # Publish to public NPM registry
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
     - npm publish
+    # pushto github
+    - git push https://$GITHUB_TOKEN@github.com/RadicalGeekTechnology/service-chassis-nodejs.git HEAD:main
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
