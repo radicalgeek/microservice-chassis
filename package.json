@@ -1,7 +1,7 @@
 {
-  "name": "@trigbagger/service-chassis",
+  "name": "@radicalgeek/service-chassis",
   "version": "1.0.0",
-  "description": "reusable service chassis for building microservices",
+  "description": "Reusable service chassis for building microservices",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
