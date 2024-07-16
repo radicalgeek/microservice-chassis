@@ -4,6 +4,8 @@
 
 This service chassis is a foundational codebase designed to accelerate the development of microservices by providing core functionalities such as server setup, logging, message queue interactions, caching, and blob storage access. It is built with Node.js and integrates several third-party services and libraries to ensure robust, scalable, and maintainable microservices.
 
+The package is a fork from https://github.com/radicalgeek/node-microservice-chassis
+
 ## Features
 
 - Server Configuration: Utilizes Express.js for setting up the server and handling HTTP requests with additional security measures through Helmet.js and CORS support.
@@ -19,14 +21,14 @@ This service chassis is a foundational codebase designed to accelerate the devel
 First install the NPM package in your project:
 
 ```bash
-npm install @radicalgeek/service-chassis
+npm install @leighton/service-chassis
 ```
 
 Then, create a new service by importing `service` and creating a `serviceConfig` object. The `serviceConfig` object should contain the http routes, message listeners, and any startup messages for the service. Finally, start the service by calling the `start` method with the `serviceConfig`  object and the database connection object:
 
 ```javascript
 // entry.js
-const { service } = require('@trigbagger/service-chassis');
+const { service } = require('@leighton/service-chassis');
 const myApi = require('./routes/myApi');
 const { messages, myFirstListener, mySecondListener } = require('./sagas');
 const db = require('./models');
@@ -138,7 +140,7 @@ Define the message listeners for your service by creating a ./sagas/listeners di
 const db = require('../.././models');
 const { messages } = require('../sagas');
 const apm = require('elastic-apm-node')
-const { logger, publishMessage, validateMessage } = require('@radicalgeek/service-chassis');
+const { logger, publishMessage, validateMessage } = require('@leighton/service-chassis');
 
 const interestdInSaga = 'needObjects';
 const listener = 'objectRequestListener'
@@ -178,7 +180,7 @@ Messages can be published from anywhere in your service by importing the `publis
 ```javascript
 // ./routes/myApi.js
 const { MyObject } = require('../models');
-const { setupPublisher, publishMessage } = require('@radicalgeek/service-chassis');
+const { setupPublisher, publishMessage } = require('@leighton/service-chassis');
 
 ...
 

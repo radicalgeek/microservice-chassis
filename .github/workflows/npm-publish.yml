@@ -1,0 +1,71 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+    DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'latest'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Cache npm
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Fetch tags
+        run: |
+          git fetch --tags
+
+      - name: Determine version
+        id: version
+        run: |
+          latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1) || echo "1.0.0")
+          latest_major=$(echo $latest_tag | cut -d'.' -f1)
+          latest_minor=$(echo $latest_tag | cut -d'.' -f2)
+          if [ "$latest_major" != "$MAJOR_VERSION" ]; then
+            MINOR_VERSION=0
+          else
+            MINOR_VERSION=$((latest_minor+1))
+          fi
+          if git rev-parse refs/tags/$latest_tag >/dev/null 2>&1; then
+            PATCH_VERSION=$(git rev-list refs/tags/$latest_tag..HEAD --count)
+          else
+            PATCH_VERSION=0
+          fi
+          FULL_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
+          echo "::set-output name=tag::$FULL_VERSION"
+
+      - name: Tag the new version
+        run: |
+          git tag ${{ steps.version.outputs.tag }}
+          git push https://$DEPLOY_TOKEN@github.com/${{ github.repository }} --tags
+
+      - name: Configure .npmrc for GitHub Packages
+        run: |
+          echo "registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.DEPLOY_TOKEN }}" >> .npmrc
+
+      - name: Publish to GitHub Packages
+        run: npm publish
