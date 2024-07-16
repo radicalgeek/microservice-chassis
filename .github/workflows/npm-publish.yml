@@ -55,11 +55,11 @@ jobs:
             PATCH_VERSION=0
           fi
           FULL_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
-          echo "::set-output name=tag::$FULL_VERSION"
+          echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
 
       - name: Tag the new version
         run: |
-          git tag ${{ steps.version.outputs.tag }}
+          git tag ${{ env.FULL_VERSION }}
           git push https://$DEPLOY_TOKEN@github.com/${{ github.repository }} --tags
 
       - name: Configure .npmrc for GitHub Packages
