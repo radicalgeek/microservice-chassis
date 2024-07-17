@@ -1,5 +1,5 @@
 {
-  "name": "@leighton/service-chassis",
+  "name": "@leighton-digital/service-chassis",
   "version": "1.0.0",
   "description": "Reusable service chassis for building microservices",
   "main": "index.js",
