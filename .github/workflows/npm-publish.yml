@@ -69,6 +69,6 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.DEPLOY_TOKEN }}" >> .npmrc
 
       - name: Publish to GitHub Packages
-        run: npm publish
+        run: npm publish --access public
 
         
