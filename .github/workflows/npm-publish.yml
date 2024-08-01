@@ -8,6 +8,7 @@ on:
 
 env:
     DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+    MAJOR_VERSION: ${{ secrets.MAJOR_VERSION }}
 
 jobs:
   publish:
@@ -21,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 'latest'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm ci --prefer-offline
@@ -55,11 +56,11 @@ jobs:
             PATCH_VERSION=0
           fi
           FULL_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
-          echo "::set-output name=tag::$FULL_VERSION"
+          echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
 
       - name: Tag the new version
         run: |
-          git tag ${{ steps.version.outputs.tag }}
+          git tag ${{ env.FULL_VERSION }}
           git push https://$DEPLOY_TOKEN@github.com/${{ github.repository }} --tags
 
       - name: Configure .npmrc for GitHub Packages
@@ -68,4 +69,6 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.DEPLOY_TOKEN }}" >> .npmrc
 
       - name: Publish to GitHub Packages
-        run: npm publish
+        run: npm publish --access public
+
+        
