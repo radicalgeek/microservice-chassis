@@ -63,6 +63,11 @@ jobs:
           git tag ${{ env.FULL_VERSION }}
           git push https://$DEPLOY_TOKEN@github.com/${{ github.repository }} --tags
 
+      - name: Update package.json version
+        run: |
+          sed -i 's/"version": "*"/"version": "${{ env.FULL_VERSION }}"/' package.json
+         
+
       - name: Configure .npmrc for GitHub Packages
         run: |
           echo "registry=https://npm.pkg.github.com" > .npmrc
