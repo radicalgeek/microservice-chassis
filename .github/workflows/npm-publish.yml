@@ -65,7 +65,7 @@ jobs:
 
       - name: Update package.json version
         run: |
-          sed -i 's/"version": "*"/"version": "${{ env.FULL_VERSION }}"/' package.json
+          sed -i 's/"version": "[^"]*"/"version": "${{ env.FULL_VERSION }}"/' package.json
          
 
       - name: Configure .npmrc for GitHub Packages
